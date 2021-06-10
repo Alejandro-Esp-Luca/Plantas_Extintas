@@ -1,0 +1,53 @@
+---
+title: "Exploración plantas extintas"
+author: "Alejandro Espinosa"
+date: "9/6/2021"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+library(knitr)
+```
+
+## Introducción
+
+### De donde vienen los datos
+
+Estos datos sobre plantas extintas son datos de la **IUCN** y se obtuvieron del [siguiente repositorio](https://raw.githubusercontent.com/rfordatascience/tidytuesday) de github
+
+```{r, echo = F, message= F, warning=F}
+plants <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/plants.csv")
+actions <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/actions.csv")
+threats <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/threats.csv")
+```
+
+### Datos de Sudamérica
+
+El número de especies que hay en Sudamérica es `r plants %>%  dplyr :: filter(continent == "South America") %>% nrow()` especies 
+
+##### Tabla pequeña
+```{r, echo=F}
+data("msleep")
+Tabla <- msleep %>% group_by(vore) %>% summarise_at("sleep_total", .funs = list(Mean = mean, SD = sd)) %>% 
+      dplyr::filter(!is.na(vore)) %>% arrange(desc(Mean))
+
+kable(Tabla, digits = 2) %>% kable_styling(bootstrap_options = c("striped", 
+    "hover", "condensed"), full_width = F)
+
+```
+
+#### Tablas largas
+```{r, echo = F}
+
+msleep_long <- msleep %>% dplyr::select(name, vore, 
+                                        sleep_total, brainwt)
+
+kable(msleep_long, digits = 2, caption = "La base de datos entera") %>% 
+  kable_styling(bootstrap_options = c("striped", 
+                                      "hover", "condensed"), full_width = F) %>% 
+  scroll_box(width = "800px", height = "200px") 
+
